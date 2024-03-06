@@ -2,8 +2,8 @@
 
 ## Class and Function Naming:
 
-Class names should follow CamelCase, e.g., PlayingCard, Deck, Table, StockWaste, Foundation.
-Function names should be in lowercase with words separated by underscores, e.g., is_below, is_opposite_suit, can_attach, add_cards, table_to_table, table_to_foundation, waste_to_table.
+Class names should follow PascalCase, e.g., PlayingCard, Deck, Table, StockWaste, Foundation.
+Function names should be in camelCase, e,g., addCard, getTopCard.
 Use clear and descriptive names for variables and functions to enhance code readability.
 
 ## Comments:
@@ -28,10 +28,6 @@ Implement error handling where necessary. For example, check if the stock pile i
 Use consistent indentation (4 spaces per level) to enhance code readability.
 Ensure there are spaces around operators for improved clarity.
 
-## Separation of Concerns:
-
-The printTable function mixes logic for printing and retrieving data. Consider separating the printing logic from the data retrieval logic for better maintainability.
-
 ## User Interface:
 
 Provide clear and concise instructions to the user, as seen in the printValidCommands function.
@@ -45,7 +41,6 @@ Follow a logical order for function and method definitions within a class.
 ## Testing:
 
 Implement comprehensive unit tests for critical functions and classes using the unittest module.
-Test various scenarios, including edge cases and common use cases.
 
 ## Modularity:
 
