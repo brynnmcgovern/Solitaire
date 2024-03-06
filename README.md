@@ -33,11 +33,11 @@ sw - Move a card from stock to waste.
 
 wf - Move a card from waste to foundation.
 
-wt #T - Move a card from waste to the table column.
+wt (table column #) - Move a card from waste to the table column.
 
-tf #T - Move a card from the table column to the foundation.
+tf (table column #) - Move a card from the table column to the foundation.
 
-tt #T1 #T2 - Move a card from one table column to another.
+tt (first table column #) (second table column #) - Move a card from one table column to another.
 
 h - Display valid commands.
 
@@ -45,3 +45,6 @@ q - Quit the game.
 
 ## Dependencies
 The script uses the random module for shuffling cards.
+
+## Sources
+I used online resources for debugging such as StackOverflow and Geeks for Geeks. 
