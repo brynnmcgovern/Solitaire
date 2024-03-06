@@ -14,14 +14,14 @@ class PlayingCard():
     def isRankBelow(self, card):
         return self.value == (card.value - 1)
 
-    def isOppositeSuit(self, card):
+    def isOpposite(self, card):
         if self.suit == "club" or self.suit == "spde":
             return card.suit == "hrt" or card.suit == "diam"
         else:
             return card.suit == "spde" or card.suit == "club"
 
-    def canAttach(self, card):
-        if card.isRankBelow(self) and card.isOppositeSuit(self):
+    def canBePlaced(self, card):
+        if card.isRankBelow(self) and card.isOpposite(self):
             return True
         else:
             return False
@@ -57,37 +57,37 @@ class Table():
         if len(self.unflipped[col]) > 0:
             self.flipped[col].append(self.unflipped[col].pop())
 
-    def pileLength(self):
+    def columnLength(self):
         """ Returns the length of the longest pile on the table """
         return max([len(self.flipped[x]) + len(self.unflipped[x]) for x in range(7)])
 
-    def addCards(self, cards, column):
+    def addCardToColumn(self, cards, column):
         """ Returns true if cards were successfully added to column on the table.
             Returns false otherwise. """
         column_cards = self.flipped[column]
         if len(column_cards) == 0 and cards[0].value == 13:
             column_cards.extend(cards)
             return True
-        elif len(column_cards) > 0 and column_cards[-1].canAttach(cards[0]):
+        elif len(column_cards) > 0 and column_cards[-1].canBePlaced(cards[0]):
             column_cards.extend(cards)
             return True
         else:
             return False
 
-    def tableToTable(self, c1, c2):
+    def moveTableToTable(self, c1, c2):
         """ Returns True if any card(s) are successfully moved from c1 to c2 on
             the table, returns False otherwise. """
         c1_cards = self.flipped[c1]
 
         for index in range(len(c1_cards)):
-            if self.addCards(c1_cards[index:], c2):
+            if self.addCardToColumn(c1_cards[index:], c2):
                 self.flipped[c1] = c1_cards[0:index]
                 if index == 0:
                     self.flipCard(c1)
                 return True
         return False
 
-    def tableToFoundation(self, Foundation, column):
+    def moveTableToFoundation(self, Foundation, column):
         """ Moves a card from the table to the appropriate Foundation pile """
         column_cards = self.flipped[column]
         if len(column_cards) == 0:
@@ -101,11 +101,11 @@ class Table():
         else:
             return False
 
-    def wasteToTable(self, waste_pile, column):
+    def moveWasteToTable(self, waste_pile, column):
         """ Returns True if a card from the waste pile is successfully moved to a column
             on the table, returns False otherwise. """
         card = waste_pile.waste[-1]
-        if self.addCards([card], column):
+        if self.addCardToColumn([card], column):
             waste_pile.popWasteCard()
             return True
         else:
@@ -118,7 +118,7 @@ class StockWaste():
         self.deck = cards
         self.waste = []
 
-    def stockToWaste(self):
+    def moveStockToWaste(self):
         """Returns True if a card is successfully moved from the stock pile to the
         waste pile, returns False otherwise."""
         if len(self.deck) + len(self.waste) == 0:
@@ -138,7 +138,7 @@ class StockWaste():
         if len(self.waste) > 0:
             return self.waste.pop()
 
-    def getTopWaste(self):
+    def getTopWasteCard(self):
         """Retrieves the top card of the waste pile."""
         if len(self.waste) > 0:
             return self.waste[-1]
@@ -212,13 +212,13 @@ def printTable(table, Foundation, stock_waste):
     """ Prints the current status of the table """
 
     print("waste \t stock \t\t\t\t Foundation")
-    print("{}\t{}\t\t{}\t{}\t{}\t{}".format(stock_waste.getTopWaste(), stock_waste.getStockAmount(),
+    print("{}\t{}\t\t{}\t{}\t{}\t{}".format(stock_waste.getTopWasteCard(), stock_waste.getStockAmount(),
                                              Foundation.getTopCard("club"), Foundation.getTopCard("hrt"),
                                              Foundation.getTopCard("spde"), Foundation.getTopCard("diam")))
     print("\n")
     print("\ntable\n\t1\t2\t3\t4\t5\t6\t7\n")
     # Print the cards, first printing the unflipped cards, and then the flipped.
-    for x in range(table.pileLength()):
+    for x in range(table.columnLength()):
         print_str = ""
         for col in range(7):
             hidden_cards = table.unflipped[col]
@@ -263,29 +263,29 @@ if __name__ == "__main__":
                 print("Game exited.")
                 break
             elif command == "sw":
-                if sw.stockToWaste():
+                if sw.moveStockToWaste():
                     printTable(t, f, sw)
             elif command == "wf":
-                if f.addCard(sw.getTopWaste()):
+                if f.addCard(sw.getTopWasteCard()):
                     sw.popWasteCard()
                     printTable(t, f, sw)
                 else:
                     print("Error! Card could not be moved from the waste to the foundation.")
             elif "wt" in command and len(command) == 3:
                 col = int(command[-1]) - 1
-                if t.wasteToTable(sw, col):
+                if t.moveWasteToTable(sw, col):
                     printTable(t, f, sw)
                 else:
                     print("Error! Card could not be moved from the waste to the table column.")
             elif "tf" in command and len(command) == 3:
                 col = int(command[-1]) - 1
-                if t.tableToFoundation(f, col):
+                if t.moveTableToFoundation(f, col):
                     printTable(t, f, sw)
                 else:
                     print("Error! Card could not be moved from the table column to the foundation.")
             elif "tt" in command and len(command) == 4:
                 c1, c2 = int(command[-2]) - 1, int(command[-1]) - 1
-                if t.tableToTable(c1, c2):
+                if t.moveTableToTable(c1, c2):
                     printTable(t, f, sw)
                 else:
                     print("Error! Card could not be moved from that table column.")
