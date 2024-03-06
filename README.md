@@ -48,6 +48,8 @@ q - Quit the game.
 - Cards in the table columns can be moved if they are in descending order and have alternating colors.
 - Only Kings can be placed in an empty column on the table.
 - A card from the waste pile can be moved to the table column if it follows the descending order and alternating color rule.
+
+test
   
 ## Dependencies
 The script uses the random module for shuffling cards.
