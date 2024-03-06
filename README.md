@@ -43,6 +43,12 @@ h - Display valid commands.
 
 q - Quit the game.
 
+## Rules of Solitaire
+- Cards can be moved to the foundation piles if they follow the sequence: Ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King.
+- Cards in the table columns can be moved if they are in descending order and have alternating colors.
+- Only Kings can be placed in an empty column on the table.
+- A card from the waste pile can be moved to the table column if it follows the descending order and alternating color rule.
+  
 ## Dependencies
 The script uses the random module for shuffling cards.
 
