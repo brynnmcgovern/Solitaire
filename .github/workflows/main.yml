@@ -1,0 +1,51 @@
+name: Run Tests and Create Pull Request
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+     
+
+    - name: Run tests
+      run: |
+        python3 -m unittest unitTests.py
+
+  create-pull-request:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.head_ref }}
+        commit-message: "Run Tests: ${{ github.sha }}"
+        title: "Run Tests"
+        body: |
+          Automated pull request created to run tests.
+
+on:
+  pull_request:
+    types:
+      - opened
+
