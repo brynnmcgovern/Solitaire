@@ -39,7 +39,7 @@ tf (table column #) - Move a card from the table column to the foundation.
 
 tt (first table column #) (second table column #) - Move a card from one table column to another.
 
-h - Display valid commands.
+l - Display valid commands.
 
 q - Quit the game.
 
