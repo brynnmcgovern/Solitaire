@@ -23,7 +23,7 @@ class TestSolitaireGame(unittest.TestCase):
     def test_table_creation(self):
         card_list = [[PlayingCard(value, "club") for value in range(1, x + 1)] for x in range(1, 8)]
         table = Table(card_list)
-        self.assertEqual(table.pileLength(), max([len(table.flipped[x]) + len(table.unflipped[x]) for x in range(7)]))
+        self.assertEqual(table.columnLength(), max([len(table.flipped[x]) + len(table.unflipped[x]) for x in range(7)]))
 
         print("table_creation test passed")
 
@@ -32,7 +32,7 @@ class TestSolitaireGame(unittest.TestCase):
         cards = [PlayingCard(value % 13 + 1, "club") for value in range(1, 25)]
         stock_waste = StockWaste(cards)
 
-        self.assertTrue(stock_waste.stockToWaste())
+        self.assertTrue(stock_waste.moveStockToWaste())
         self.assertTrue(stock_waste.popWasteCard())
 
         self.assertIsInstance(stock_waste.getStockAmount(), str)
