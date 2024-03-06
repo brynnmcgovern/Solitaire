@@ -41,8 +41,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-on:
-  pull_request:
-    types:
-      - opened
 
