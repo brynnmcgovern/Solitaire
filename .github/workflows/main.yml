@@ -34,15 +34,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.head_ref }}
-        commit-message: "Run Tests: ${{ github.sha }}"
-        title: "Run Tests"
-        body: |
-          Automated pull request created to run tests.
+    - steps:
+    - name: create pull request
+      run: gh pr create -B base_branch -H branch_to_merge --title 'Merge branch_to_merge into base_branch' --body 'Created by Github action'
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 on:
   pull_request:
