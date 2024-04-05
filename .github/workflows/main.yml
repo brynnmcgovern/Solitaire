@@ -35,7 +35,7 @@ jobs:
         if: always()
         uses: peter-evans/create-pull-request@v6.0.2
         with:
-          name: Unit Tests and Linting
+          title: Unit Tests and Linting
 
 
 
