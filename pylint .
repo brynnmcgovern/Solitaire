@@ -1,0 +1,50 @@
+import ast
+
+class PythonLinter(ast.NodeVisitor):
+    def __init__(self):
+        self.errors = []
+
+    def visit_ClassDef(self, node):
+        # Rule 1: Check class names for CamelCase
+        if not node.name[0].isupper():
+            self.errors.append(f"Class name '{node.name}' should start with a capital letter. Line: {node.lineno}")
+
+        self.generic_visit(node)
+
+    def visit_FunctionDef(self, node):
+        # Rule 1: Check function names for snake_case
+        if "_" not in node.name:
+            self.errors.append(f"Function name '{node.name}' should be in snake_case. Line: {node.lineno}")
+
+        self.generic_visit(node)
+
+    def visit_Import(self, node):
+        # Rule 3: Check for unused imports
+        self.errors.append(f"Unused import statement detected. Line: {node.lineno}")
+
+        self.generic_visit(node)
+
+    def visit_ImportFrom(self, node):
+        # Rule 3: Check for unused imports
+        self.errors.append(f"Unused import statement detected. Line: {node.lineno}")
+
+        self.generic_visit(node)
+
+def lint_python_code(code):
+    tree = ast.parse(code)
+    linter = PythonLinter()
+    linter.visit(tree)
+    return linter.errors
+
+if __name__ == "__main__":
+    with open("your_python_file.py", "r") as file:
+        python_code = file.read()
+
+    errors = lint_python_code(python_code)
+
+    if errors:
+        print("Linting failed:")
+        for error in errors:
+            print(error)
+    else:
+        print("Linting passed.")
