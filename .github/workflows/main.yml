@@ -35,15 +35,17 @@ jobs:
         run: exit $(($? + $?))
         # This will exit with a non-zero status if any of the previous steps failed
 
-      - name: Create PR Check Status
+      - name: Create Pull Request
         if: always()
-        uses: peter-evans/create-pull-request-check@v6.0.2
+        uses: peter-evans/create-pull-request@v6.0.2
         with:
           name: Unit Tests and Linting
           status: ${{ job.status }}
           conclusion: ${{ job.status }}
 
 
+                
+            
 
   
 
