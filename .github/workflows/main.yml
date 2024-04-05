@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -36,8 +36,7 @@ jobs:
         uses: peter-evans/create-pull-request@v6.0.2
         with:
           name: Unit Tests and Linting
-          status: ${{ job.status }}
-          conclusion: ${{ job.status }}
+
 
 
                 
