@@ -1,6 +1,7 @@
 import random
 import copy
 
+
 class PlayingCard():
     card_to_name = {1: "A", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6", 7: "7",
                     8: "8", 9: "9", 10: "10", 11: "J", 12: "Q", 13: "K"}
@@ -203,6 +204,7 @@ def printValidCommands():
     print("\ttf (table column #) - move card from table to foundation")
     print("\ttt (first table column #) (second table column #) - move card from one table column to another")
     print("\tl - display the list of commands")
+    print("\tu - undo the last move")
     print("\tq - quit")
     print("\t Note: club = clubs, hrt = hearts, spde = spades, diam = diamonds")
     print("\n")
@@ -254,6 +256,9 @@ if __name__ == "__main__":
         printValidCommands()
         printTable(t, f, sw)
 
+        # Initialize an empty stack to store game states
+        undo_stack = []
+
         while not f.gameWon():
             command = input("Enter a command (type 'l' for list of commands): ")
             command = command.lower().replace(" ", "")
@@ -262,35 +267,48 @@ if __name__ == "__main__":
             elif command == "q":
                 print("Game exited.")
                 break
-            elif command == "sw":
-                if sw.moveStockToWaste():
-                    printTable(t, f, sw)
-            elif command == "wf":
-                if f.addCard(sw.getTopWasteCard()):
-                    sw.popWasteCard()
-                    printTable(t, f, sw)
-                else:
-                    print("Error! Card could not be moved from the waste to the foundation.")
-            elif "wt" in command and len(command) == 3:
-                col = int(command[-1]) - 1
-                if t.moveWasteToTable(sw, col):
+            elif command == "u":
+                # Undo the last move by restoring the previous game state
+                if undo_stack:
+                    t, f, sw = undo_stack.pop()
+                    print("Undo successful.")
                     printTable(t, f, sw)
                 else:
-                    print("Error! Card could not be moved from the waste to the table column.")
-            elif "tf" in command and len(command) == 3:
-                col = int(command[-1]) - 1
-                if t.moveTableToFoundation(f, col):
-                    printTable(t, f, sw)
-                else:
-                    print("Error! Card could not be moved from the table column to the foundation.")
-            elif "tt" in command and len(command) == 4:
-                c1, c2 = int(command[-2]) - 1, int(command[-1]) - 1
-                if t.moveTableToTable(c1, c2):
-                    printTable(t, f, sw)
-                else:
-                    print("Error! Card could not be moved from that table column.")
+                    print("Nothing to undo.")
             else:
-                print("Sorry, that is not a valid command.")
+                # Save the current game state before executing a command
+                game_state = (copy.deepcopy(t), copy.deepcopy(f), copy.deepcopy(sw))
+                undo_stack.append(game_state)
+
+                if command == "sw":
+                    if sw.moveStockToWaste():
+                        printTable(t, f, sw)
+                elif command == "wf":
+                    if f.addCard(sw.getTopWasteCard()):
+                        sw.popWasteCard()
+                        printTable(t, f, sw)
+                    else:
+                        print("Error! Card could not be moved from the waste to the foundation.")
+                elif "wt" in command and len(command) == 3:
+                    col = int(command[-1]) - 1
+                    if t.moveWasteToTable(sw, col):
+                        printTable(t, f, sw)
+                    else:
+                        print("Error! Card could not be moved from the waste to the table column.")
+                elif "tf" in command and len(command) == 3:
+                    col = int(command[-1]) - 1
+                    if t.moveTableToFoundation(f, col):
+                        printTable(t, f, sw)
+                    else:
+                        print("Error! Card could not be moved from the table column to the foundation.")
+                elif "tt" in command and len(command) == 4:
+                    c1, c2 = int(command[-2]) - 1, int(command[-1]) - 1
+                    if t.moveTableToTable(c1, c2):
+                        printTable(t, f, sw)
+                    else:
+                        print("Error! Card could not be moved from that table column.")
+                else:
+                    print("Sorry, that is not a valid command.")
 
         if f.gameWon():
             print("Congratulations! You've won!")
