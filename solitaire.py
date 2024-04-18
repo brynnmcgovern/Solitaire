@@ -1,5 +1,6 @@
 import random
 import copy
+import time #for timer
 
 
 class PlayingCard():
@@ -198,7 +199,7 @@ class Foundation():
 def printValidCommands():
     """ Provides the list of commands, for when users press 'l' """
     print("Valid Commands: ")
-    print("\tmv - move card from stock to waste")
+    print("\tsw - move card from stock to waste")
     print("\twf - move card from waste to foundation")
     print("\twt (table column #) - move card from waste to table")
     print("\ttf (table column #) - move card from table to foundation")
@@ -243,6 +244,7 @@ def selectGame():
     return int(choice)
 
 if __name__ == "__main__":
+    score = []
     selected_game = selectGame()
 
     if selected_game == 1:
@@ -259,7 +261,13 @@ if __name__ == "__main__":
         # Initialize an empty stack to store game states
         undo_stack = []
 
+        # Start timer
+        start_time = time.time()
+
         while not f.gameWon():
+            minutes, seconds = divmod(time.time() - start_time, 60)
+            print("Timer: {} minutes and {} seconds".format(int(minutes), int(seconds)))
+
             command = input("Enter a command (type 'l' for list of commands): ")
             command = command.lower().replace(" ", "")
             if command == "l":
@@ -312,5 +320,10 @@ if __name__ == "__main__":
 
         if f.gameWon():
             print("Congratulations! You've won!")
+            
+            # timer / score
+            minutes, seconds = divmod(time.time() - start_time, 60)
+            score.append("{} minutes and {} seconds".format(int(minutes), int(seconds)))
+            print("Total time: {} minutes and {} seconds".format(int(minutes), int(seconds)))
     else:
         print("Selected game not implemented yet.")
