@@ -18,14 +18,16 @@ jobs:
         with:
           python-version: '3.x'  
 
-
       - name: Run Unit Tests
         run: python3 unitTests.py
-        continue-on-error: true  # Continue even if tests fail, we'll check the status later
+        continue-on-error: true  # Continue even if tests fail
 
       - name: Run Linter
-        run: pylint .
-        continue-on-error: true  # Continue even if linting fails, we'll check the status later
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install pylint
+          pylint .
+        continue-on-error: true  # Continue even if linting fails
 
       - name: Check Test and Lint Results
         run: exit $(($? + $?))
@@ -37,3 +39,4 @@ jobs:
         with:
           title: Unit Tests and Linting
           base: main
+
