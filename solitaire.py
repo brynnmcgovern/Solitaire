@@ -206,6 +206,7 @@ def printValidCommands():
     print("\ttt (first table column #) (second table column #) - move card from one table column to another")
     print("\tl - display the list of commands")
     print("\tu - undo the last move")
+    print("\tr - reset game")
     print("\tq - quit")
     print("\t Note: club = clubs, hrt = hearts, spde = spades, diam = diamonds")
     print("\n")
@@ -242,6 +243,32 @@ def selectGame():
     print("2. Other Modes")
     choice = input("Enter the number of the game you'd like to play: ")
     return int(choice)
+
+def restartGame():
+    """Function that allows players to start a new game or reset"""
+    global t, f, sw, undo_stack, start_time
+    d = Deck()
+    t = Table([d.deal(x) for x in range(1,8)])
+    f = Foundation()
+    sw = StockWaste(d.deal(24))
+
+    undo_stack = []
+
+    start_time = time.time()
+
+    print("\nNew game started!\n")
+    printTable(t,f,sw)
+
+def playAgain():
+    while True: 
+        choice = input("Do you want to play again? (yes/no): ").lower()
+        if choice == "yes":
+            restartGame()
+            return True
+        elif choice == "no":
+            return False
+        else: 
+            print("Invalid choice. Please enter 'yes' or 'no'.")
 
 if __name__ == "__main__":
     score = []
@@ -283,6 +310,8 @@ if __name__ == "__main__":
                     printTable(t, f, sw)
                 else:
                     print("Nothing to undo.")
+            elif command == "r":
+                restartGame()
             else:
                 # Save the current game state before executing a command
                 game_state = (copy.deepcopy(t), copy.deepcopy(f), copy.deepcopy(sw))
@@ -325,5 +354,7 @@ if __name__ == "__main__":
             minutes, seconds = divmod(time.time() - start_time, 60)
             score.append("{} minutes and {} seconds".format(int(minutes), int(seconds)))
             print("Total time: {} minutes and {} seconds".format(int(minutes), int(seconds)))
+            
+            play_more = playAgain()
     else:
         print("Selected game not implemented yet.")
