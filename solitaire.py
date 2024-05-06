@@ -260,6 +260,7 @@ def restartGame():
     printTable(t,f,sw)
 
 def playAgain():
+    """Function to ask the player if they want to play again"""
     while True: 
         choice = input("Do you want to play again? (yes/no): ").lower()
         if choice == "yes":
